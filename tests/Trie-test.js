@@ -1,11 +1,14 @@
 import { assert } from 'chai';
 import { expect } from 'chai';
-
 import CompleteMe from '../scripts/Trie.js'
+const fs = require('fs');
 
 describe('CompleteMe', () => {
 
   let completion = new CompleteMe
+
+  const text = "/usr/share/dict/words"
+  let dictionary = fs.readFileSystem(text).toString('utf-8').trim().split('\n')
 
   it('should be a constructor function', () => {
     assert.isFunction(CompleteMe)
@@ -44,6 +47,11 @@ describe('CompleteMe', () => {
 
   it('should return nothing if no word matches', () => {
     assert.deepEqual(completion.suggest('m'), [])
+  })
+
+  it('should push dictionary into populate []', () => {
+    completion.populate(dictionary);
+    assert.equal(completion.populate.length, 235886)
   })
 
 })
