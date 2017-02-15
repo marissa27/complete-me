@@ -1,57 +1,51 @@
 import { assert } from 'chai';
 import { expect } from 'chai';
-import CompleteMe from '../scripts/Trie.js'
+import Trie from '../scripts/Trie.js'
+import Node from '../scripts/Node.js'
 const fs = require('fs');
 
-describe('CompleteMe', () => {
+describe('Trie', () => {
 
-  let completion = new CompleteMe
+  beforeEach
+  let trie = new Trie
 
   const text = "/usr/share/dict/words"
-  let dictionary = fs.readFileSystem(text).toString('utf-8').trim().split('\n')
+  // let dictionary = fs.readFileSystem(text).toString('utf-8').trim().split('\n')
 
   it('should be a constructor function', () => {
-    assert.isFunction(CompleteMe)
+    assert.isFunction(Trie)
   })
 
-  it('should have instance called completion', () => {
-    expect(completion).to.be.an.instanceof(CompleteMe);
+  it('should have instance called trie', () => {
+    expect(trie).to.be.an.instanceof(Trie);
   })
 
   it('should have a method of insert()', () => {
-    assert.isFunction(completion.insert)
+    assert.isFunction(trie.insert)
   })
 
   it('should have a method of count()', () => {
-    assert.isFunction(completion.count)
+    assert.isFunction(trie.count)
   })
 
   it('should have a method of suggest()', () => {
-    assert.isFunction(completion.suggest)
+    assert.isFunction(trie.suggest)
   })
 
-  it('should take pizza and push into array', () => {
-    completion.insert('pizza');
-    assert.deepEqual(completion.words, [ 'pizza' ] )
+  it('should know word end', () => {
+
+    trie.insert('suh')
+
+    assert.equal(trie.root.children.s.children.u.children.h.wordEnd, true)
   })
 
-  it('should push suh into words []', () => {
-    completion.insert('suh');
-    assert.equal(completion.words.length, 2)
-  })
+  it('should have 2 words', () => {
+    let pizza = trie.insert('pizza');
+    let suh = trie.insert('suh');
 
-  it('should suggest a word', () => {
-    assert.deepEqual(completion.suggest('piz'), ['pizza'])
-    assert.deepEqual(completion.suggest('suh'), ['suh'])
-  })
+    // console.log(JSON.stringify(trie.root, null, 4))
 
-  it('should return nothing if no word matches', () => {
-    assert.deepEqual(completion.suggest('m'), [])
-  })
-
-  it('should push dictionary into populate []', () => {
-    completion.populate(dictionary);
-    assert.equal(completion.populate.length, 235886)
+    assert.equal(trie.words, 3);
   })
 
 })
