@@ -1,23 +1,26 @@
-import Node from '../scripts/Node.js'
+import Node from '../scripts/Node.js';
 
 class Trie {
   constructor () {
     this.root = new Node();
-    this.words = 0;
+    this.length = 0;
+    this.suggestions = [];
   }
 
   insert (word) {
     let wordArr = word.split('');
     let current = this.root;
 
-    wordArr.forEach((letter,index) => {
-      if( current.children[letter] ) {
+    wordArr.forEach(letter => {
+      if ( current.children[letter] ) {
         current = current.children[letter];
-      }
+      } else {
         current.children[letter] = new Node(letter);
         current = current.children[letter];
-    })
-    this.words++
+      }
+    });
+
+    this.length++;
     current.wordEnd = true;
   }
 
@@ -25,20 +28,56 @@ class Trie {
     return this.length;
   }
 
-  countDictionary () {
+  suggest (string) {
+    let currentNode = this.root;
+    let stringArray = string.split('');
 
+    for (var i = 0; i < stringArray.length; i++) {
+      if (currentNode.children[stringArray[i]]) {
+        currentNode = currentNode.children[stringArray[i]];
+      }
+      else {
+        return [];
+      }
+    }
+    this.words(currentNode, string);
   }
 
-  suggest (string) {
+  words (node, string) {
+    if (node.wordEnd) {
+      this.suggestions.push(string);
+    }
 
-    // return this.words.filter((elem) =>
-    //  elem.toLowerCase().indexOf(query.toLowerCase()) > -1
-  //  )
- }
+    let nodeKeys = Object.keys(node.children);
+    nodeKeys.forEach((letter) => {
+      let nextNode = node.children[letter];
+      this.words(nextNode, (string + letter));
+    });
+  }
 
-   populate (dictionary) {
-     return this.populate.push(dictionary);
-   }
+  populate (array) {
+    array.forEach(word  => {
+      this.insert(word);
+    });
+  }
+
+  selected (substring) {
+    // need array of returned suggested words
+    // let suggestedArray = this.suggest(substring);
+    // console.log(this.suggestions);
+    // console.log(suggestedArray);
+
+
+    // let user choose a word
+
+
+    // return suggest string and chosen word
+
+
+// Your library should support a select method which takes a substring and the selected suggestion.
+
+//You will need to record this selection in your trie and use it to influence future selections to make.
+  }
 }
-//
-export default Trie
+
+export default Trie;
